@@ -54,6 +54,9 @@ def say_ip():
     ip_address = subprocess.check_output("hostname -I | cut -d' ' -f1", shell=True)
     aiy.audio.say('My IP address is %s' % ip_address.decode('utf-8'))
 
+def say_hostname():
+    hostname = subprocess.check_output("hostname", shell=True)
+    aiy.audio.say("%s" %hostname.decode('utf-8'))
 
 def process_event(assistant, event):
     status_ui = aiy.voicehat.get_status_ui()
@@ -77,6 +80,10 @@ def process_event(assistant, event):
         elif text == 'ip address':
             assistant.stop_conversation()
             say_ip()
+            
+        elif text=="get my hostname":
+            assistant.stop_conversation()
+            say_hostname()
 
     elif event.type == EventType.ON_END_OF_UTTERANCE:
         status_ui.status('thinking')
