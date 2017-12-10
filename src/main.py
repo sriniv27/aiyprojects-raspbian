@@ -58,6 +58,15 @@ def say_hostname():
     hostname = subprocess.check_output("hostname", shell=True)
     aiy.audio.say("%s" %hostname.decode('utf-8'))
 
+def lights_off():
+    subprocess.call("ssh pi@192.168.1.111 '/var/www/rfoutlet/codesend 5528844; /var/www/rfoutlet/codesend 5534988'",shell=True)
+    aiy.audio.say("Turning off")
+
+def lights_on():
+    subprocess.call("ssh pi@192.168.1.111 '/var/www/rfoutlet/codesend 5528835; /var/www/rfoutlet/codesend 5534979'",shell=True)
+    aiy.audio.say("Turning on")
+
+
 def process_event(assistant, event):
     status_ui = aiy.voicehat.get_status_ui()
     if event.type == EventType.ON_START_FINISHED:
@@ -84,6 +93,12 @@ def process_event(assistant, event):
         elif text=="get my hostname":
             assistant.stop_conversation()
             say_hostname()
+        elif text=="turn off the lights":
+            assistant.stop_conversation()
+            lights_off()
+        elif text=="turn on the lights":
+            assistant.stop_conversation()
+            lights_on()
 
     elif event.type == EventType.ON_END_OF_UTTERANCE:
         status_ui.status('thinking')
